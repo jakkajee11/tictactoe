@@ -15,6 +15,14 @@ export enum GameStatus {
   QUIT,
 }
 
+export type SaveGameModel = {
+  id: number;
+  startAt: Date;
+  endAt?: Date;
+  status: GameStatus;
+  board: Board;
+};
+
 export type GameModel = {
   id: number;
   startAt: Date;

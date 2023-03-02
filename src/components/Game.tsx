@@ -1,8 +1,9 @@
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { Board, GameModel, GameStatus, Player } from '../types';
 import GameBoard from './GameBoard';
 import GameList from './GameList';
+import { saveGame as save, getGames } from '../API';
 
 const initEmptyBoard = (): Board => ({
   0: ['', '', ''],
@@ -115,12 +116,18 @@ export default function Game() {
       setCount((prev) => prev + 1);
       setGame(game);
       if (game.status !== GameStatus.NONE) {
-        saveGame();
+        //saveGame();
+        saveGameApi();
       }
     }
   };
 
   const newGame = () => {
+    saveGame();
+    reset();
+  };
+
+  const newGameApi = () => {
     saveGame();
     reset();
   };
@@ -136,9 +143,27 @@ export default function Game() {
     setGameRecords((prev) => [...prev, game]);
   };
 
+  const fetchGamesApi = async () => {
+    const res = await getGames();
+
+    return res.data as GameModel[];
+  };
+
+  const saveGameApi = async () => {
+    await save(game);
+    const games = await fetchGamesApi();
+    setGameRecords(games);
+  };
+
   const quitGame = () => {
     game.status = GameStatus.QUIT;
     saveGame();
+    reset();
+  };
+
+  const quitGameApi = () => {
+    game.status = GameStatus.QUIT;
+    saveGameApi();
     reset();
   };
 
@@ -146,6 +171,15 @@ export default function Game() {
     setGame(initGame());
     setCount(0);
   };
+
+  const loadInitData = async () => {
+    const data = await fetchGamesApi();
+    setGameRecords(data);
+  };
+
+  useEffect(() => {
+    loadInitData();
+  }, []);
 
   return (
     <div className='game-container'>
@@ -155,8 +189,8 @@ export default function Game() {
           <GameBoard
             data={game}
             onMark={markValue}
-            onNew={newGame}
-            onQuit={quitGame}
+            onNew={newGameApi}
+            onQuit={quitGameApi}
           />
         </Col>
         <Col className='gutter-row' span={12}>
