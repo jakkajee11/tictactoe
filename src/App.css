@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.game-container {
+  margin-top: 50px;
+}
