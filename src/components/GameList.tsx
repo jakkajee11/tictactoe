@@ -50,9 +50,9 @@ export default function GameList({ data }: GameListProps) {
   ];
 
   const values = data?.map(
-    (d) =>
+    (d, i) =>
       ({
-        key: '1',
+        key: i.toString(),
         startAt: d.startAt,
         endAt: d.endAt,
         id: d.id,

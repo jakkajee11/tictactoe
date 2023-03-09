@@ -128,7 +128,6 @@ export default function Game() {
   };
 
   const newGameApi = () => {
-    saveGame();
     reset();
   };
 
